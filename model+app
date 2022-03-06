@@ -1,0 +1,141 @@
+import pandas as pd
+bcdata=pd.read_csv("risk.csv")
+bcdata.head(10)
+col=bcdata.columns
+print(col)
+bcdata=bcdata.drop(['count'],axis=1)
+bcdata=bcdata.drop(['training'],axis=1)
+bcdata.head(10)
+bcdata.shape
+bcdata.info()
+bcdata.describe()
+y=bcdata['cancer']
+x=bcdata.drop(['cancer'],axis=1)
+print(y.head(2))
+x.head(2)
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test=train_test_split(x,y,train_size=0.7,random_state=2758)
+
+x_train.shape,x_test.shape,y_train.shape,y_test.shape
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestRegressor
+lr=LogisticRegression()
+rf=RandomForestRegressor()
+
+lr.fit(x_train,y_train)
+y_pred=lr.predict(x_test)
+from sklearn.metrics import confusion_matrix
+confusion_matrix(y_pred,y_test)
+#HIGH NUMBER OF FALSE POSITIVES
+#PEOPLE WITHOUT CANCER ARE PREDICTED TO BE AT RISK
+#BUT NO FALSE NEGATIVES SO ALL PEOPLE HAVING CANCER ARE CORRECTLY CLASSIFIED
+
+rf.fit(x_train,y_train,sample_weight=None)
+y_pred2=rf.predict(x_test)
+import numpy as np
+y_test=np.round_(y_test)
+y_pred2=np.round_(y_pred2)
+print(y_pred2)
+print(y_test)
+confusion_matrix(y_pred2,y_test)
+#FALSE NEGATIVES ARE PRESENT WHICH CAN BE DANGEROUS I.E. PEOPLE WITH CANCER ARE PREDICTED TO NOT HAVE CANCER .
+
+import tkinter as tk
+import numpy
+flag=0
+root=tk.Tk()
+    
+l1=tk.Label(root,text="Enter menopausal: 0 = premenopausal; 1 = postmenopausal or age>=55 ; 9 = unknown:")
+E1 = tk.Entry(root, bd=5)
+l2=tk.Label(root,text="Enter age grp:1 = 35-39; 2 = 40-44; 3 = 45-49; 4 = 50-54; 5 = 55-59; 6 = 60-64; 7 = 65-69; 8 = 70-74; 9 = 75-79; 10 = 80-84:")
+E2 = tk.Entry(root, bd=5)
+l3=tk.Label(root,text="Enter density: breast density codes 1 = Almost entirely fat; 2 = Scattered densities; 3 = Heterogeneously dense; 4 = Extremely dense; 9 = Unknown")
+E3 = tk.Entry(root, bd=5)
+l4=tk.Label(root,text="Enter race:1 = white; 2 = Asian/Pacific Islander; 3 = black; 4 = Native American; 5 = other/mixed; 9 = unknown")
+E4 = tk.Entry(root, bd=5)
+l5=tk.Label(root,text="Enter Hispanic:0 = no; 1 = yes; 9 = unknown")
+E5 = tk.Entry(root, bd=5)
+l6=tk.Label(root,text="Enter bmi:Body mass index: 1 = 10-24.99; 2 = 25-29.99; 3 = 30-34.99; 4 = 35 or more; 9 = unknown")
+E6 = tk.Entry(root, bd=5)
+l7=tk.Label(root,text="Enter Age at first birth: 0 = Age < 30; 1 = Age 30 or greater; 2 = Nulliparous; 9 = unknown")
+E7 = tk.Entry(root, bd=5)
+l8=tk.Label(root,text="Enter Number of first degree relatives with breast cancer: 0 = zero; 1= one; 2 = 2 or more; 9 = unknown")
+E8 = tk.Entry(root, bd=5)
+l9=tk.Label(root,text="Enter Previous breast procedure: 0 = no; 1 = yes; 9 = unknown")
+E9 = tk.Entry(root, bd=5)
+l10=tk.Label(root,text="Enter Result of last mammogram before the index mammogram: 0 = negative; 1 = false positive; 9 = unknown")
+E10 = tk.Entry(root, bd=5)
+l11=tk.Label(root,text="Enter Surgical menopause: 0 = natural; 1 = surgical; 9 = unknown or not menopausal (menopaus=0 or menopaus=9)")
+E11 = tk.Entry(root, bd=5)
+l12=tk.Label(root,text="Enter Current hormone therapy: 0 = no; 1 = yes; 9 = unknown or not menopausal (menopaus=0 or menopaus=9)")
+E12 = tk.Entry(root, bd=5)
+l13=tk.Label(root,text="Enter Diagnosis of invasive breast cancer within one year of the index screening mammogram: 0 = no; 1 = yes")
+E13 = tk.Entry(root, bd=5)
+l14=tk.Label(root)
+
+l1.pack()
+E1.pack()
+l2.pack()
+E2.pack()
+l3.pack()
+E3.pack()
+l4.pack()
+E4.pack()
+l5.pack()
+E5.pack()
+l6.pack()
+E6.pack()
+l7.pack()
+E7.pack()
+l8.pack()
+E8.pack()
+l9.pack()
+E9.pack()
+l10.pack()
+E10.pack()
+l11.pack()
+E11.pack()
+l12.pack()
+E12.pack()
+l13.pack()
+E13.pack()
+
+data=[]
+def comm():
+    if flag==0:
+        data.insert(0,int(E1.get()))
+        data.insert(1,int(E2.get()))
+        data.insert(2,int(E3.get()))
+        data.insert(3,int(E4.get()))
+        data.insert(4,int(E5.get()))
+        data.insert(5,int(E6.get()))
+        data.insert(6,int(E7.get()))
+        data.insert(7,int(E8.get()))
+        data.insert(8,int(E9.get()))
+        data.insert(9,int(E10.get()))
+        data.insert(10,int(E11.get()))
+        data.insert(11,int(E12.get()))
+        data.insert(12,int(E13.get()))
+        
+        data2=[]
+        data2.insert(0,data)
+        print(data2)
+        pd.DataFrame(data2)
+
+        prediction=lr.predict(data2)
+        print(prediction)
+        if prediction==[1]:
+            l14.config(text="Likelihood of cancer detected")
+        if prediction==[0]:
+            l14.config(text="No likelihood of cancer detected")
+        #flag=1
+    
+B=tk.Button(root,text="Submit",command=comm)
+l14.pack(padx=8,pady=5,side=tk.RIGHT)
+B.pack(padx=8,pady=5,side=tk.RIGHT)
+
+
+root.mainloop()
+
+
+
