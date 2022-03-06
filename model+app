@@ -132,7 +132,7 @@ def comm():
     
 B=tk.Button(root,text="Submit",command=comm)
 l14.pack(padx=8,pady=5,side=tk.RIGHT)
-B.pack(padx=8,pady=5,side=tk.RIGHT)
+B.pack()
 
 
 root.mainloop()
